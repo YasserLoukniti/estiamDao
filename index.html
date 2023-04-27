@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>DaoDashboard UI</title>
+    <script>
+         function execDaoFn(fn) {
+            $('.terminal-output').fadeIn();
+            $('.container,.button').addClass('loading');
+            $('.terminal-output').html("Execution: " + fn + "<br> Attendez ...");
+            $.get('http://localhost:3000/cmdTerminal',{cmd:fn},function(data){
+                $('.terminal-output').html(data.split('\n').join('<br>'));
+                $('.terminal-output').prepend("Execution: " + fn + "<br> Attendez ... <br><br><br>");
+                $('.container,.button').removeClass('loading');
+            })
+        }
+    </script>
+    <style>
+        .container{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+
+        .container.loading,.button.loading{
+            filter: saturate(0);
+            cursor: wait !important;
+            transition: 1s all;
+        }
+
+        .dao-logo{
+            display: block;
+            margin: 0 auto;
+        }
+
+        .terminal-output{
+            display: none;
+            height: auto;
+            max-height: 400px;
+            background-color: black;
+            padding: 10px;
+            margin-top: 40px;
+            border-radius: 5px;
+            font-family: monospace;
+            color: lime;
+            overflow: scroll;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://i.postimg.cc/J7Nh4SW-f/estiamdao.png" alt="dao-logo" class="dao-logo">
+        <br>
+        <hr>
+        <br>
+        <div class="commands-container is-block my-auto has-text-centered">
+            <button class="button is-info is-light" onclick="execDaoFn('npm i -g truffle')">Installer Truffle CLI</button>
+            <button class="button is-info is-light is-disabled" style="pointer-events: none;">></button>
+             
+            <button class="button is-info is-light" onclick="execDaoFn('truffle migrate')">Truffle Migrate</button>
+            <button class="button is-info is-light" onclick="execDaoFn('truffle migrate --reset')">Migrate & Reset</button>
+            <button class="button is-info is-light" onclick="execDaoFn('truffle exec scripts/1_create_proposal.js')">Créer un Proposal</button>
+        </div>
+        <div class="terminal-output">
+            
+        </div>
+    </div>
+</body>
+</html>
